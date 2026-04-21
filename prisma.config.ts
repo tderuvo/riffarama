@@ -11,6 +11,7 @@ export default defineConfig({
   },
   engine: "classic",
   datasource: {
-    url: env("DATABASE_URL"),
+    // CLI (migrate/generate) uses the direct connection; runtime uses DATABASE_URL via schema
+    url: env("DIRECT_URL"),
   },
 });
