@@ -51,7 +51,7 @@ const DEMO_TIMINGS: SyncedLine[] = [
 ];
 
 // The Animals — House of the Rising Sun (official)
-const DEMO_VIDEO_ID = 'O-zpOMYRi0w';
+const DEMO_VIDEO_ID = 'N4bFqW_eu2I';
 
 export default function DemoPage() {
   const playerRef = useRef<YouTubePlayerHandle>(null);
