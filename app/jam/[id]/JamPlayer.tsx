@@ -51,7 +51,7 @@ export function JamPlayer({ jam }: Props) {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-[1fr_2fr] gap-6">
           {/* Video */}
           <div className="space-y-4">
             <YouTubePlayer ref={playerRef} videoId={jam.videoId} />

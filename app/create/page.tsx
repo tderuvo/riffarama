@@ -348,7 +348,7 @@ function CreatePageInner() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-[1fr_2fr] gap-6">
           {/* Left: Video + controls */}
           <div className="space-y-4">
             <YouTubePlayer
