@@ -61,10 +61,10 @@ export function PlaybackView({ lines, timings, playerRef, fontSize = 'normal' }:
             className={[
               'rounded-lg px-3 py-1.5 transition-all duration-150',
               isActive
-                ? 'bg-amber-500/20 border border-amber-500/50 shadow-[0_0_20px_rgba(245,158,11,0.2)] scale-[1.01]'
+                ? 'bg-amber-500/20 border border-amber-500/50 shadow-[0_0_24px_rgba(245,158,11,0.25)] scale-[1.02]'
                 : isNext
-                  ? 'opacity-60 border border-transparent'
-                  : 'opacity-30 border border-transparent',
+                  ? 'opacity-40 border border-transparent'
+                  : 'opacity-20 border border-transparent',
             ].join(' ')}
           >
             <ChordLineInline
@@ -89,8 +89,12 @@ function ChordLineInline({
   fontSize: 'normal' | 'large';
   isActive: boolean;
 }) {
-  const textSize = fontSize === 'large' ? 'text-2xl' : 'text-lg';
-  const chordSize = fontSize === 'large' ? 'text-lg' : 'text-sm';
+  const textSize = isActive
+    ? (fontSize === 'large' ? 'text-3xl' : 'text-2xl')
+    : (fontSize === 'large' ? 'text-xl' : 'text-base');
+  const chordSize = isActive
+    ? (fontSize === 'large' ? 'text-xl' : 'text-base')
+    : (fontSize === 'large' ? 'text-base' : 'text-xs');
   const hasChords = pairs.some((p) => p.chord);
 
   if (!hasChords) {
@@ -109,7 +113,7 @@ function ChordLineInline({
         <span key={i} className="inline-block">
           <span
             className={`block ${chordSize} font-bold leading-none min-w-[0.5rem] ${
-              isActive ? 'text-amber-400' : 'text-amber-600'
+              isActive ? 'text-amber-300' : 'text-zinc-600'
             }`}
           >
             {pair.chord || '\u00A0'}
