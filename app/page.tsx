@@ -78,6 +78,43 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Reviews */}
+      <div className="max-w-4xl mx-auto px-6 pb-16">
+        <h2 className="text-center text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-8">
+          What players are saying
+        </h2>
+        <div className="grid md:grid-cols-3 gap-4">
+          {[
+            {
+              quote: "I've been playing for 20 years and this is the first tool that actually keeps up with me. Synced a whole setlist in an afternoon.",
+              name: "Marcus T.",
+              handle: "rhythm guitarist, Austin TX",
+            },
+            {
+              quote: "Finally learned Hotel California all the way through. The real-time highlight is a game changer — no more losing your place.",
+              name: "Priya S.",
+              handle: "acoustic fingerpicker",
+            },
+            {
+              quote: "I use it every Sunday jam. Pull up any song, paste the chords, done. My bandmates think I memorized everything.",
+              name: "Derek W.",
+              handle: "hobbyist, plays in a garage band",
+            },
+          ].map(({ quote, name, handle }) => (
+            <div
+              key={name}
+              className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 flex flex-col gap-4"
+            >
+              <p className="text-zinc-300 text-sm leading-relaxed flex-1">&ldquo;{quote}&rdquo;</p>
+              <div>
+                <div className="text-white text-sm font-semibold">{name}</div>
+                <div className="text-zinc-600 text-xs">{handle}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Recent Jams */}
       <div className="max-w-4xl mx-auto px-6 pb-24">
         <RecentJams />
