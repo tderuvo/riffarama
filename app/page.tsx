@@ -22,16 +22,21 @@ export default function Home() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-6">
+          <h1 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-4">
             Turn any YouTube song into
             <br />
             <span className="text-amber-400">a jam session</span>
           </h1>
 
+          {/* Tagline */}
+          <p className="text-xl md:text-2xl text-zinc-300 font-semibold mb-6">
+            It&apos;s Karaoke for guitarists.
+          </p>
+
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-12 leading-relaxed">
-            Paste a YouTube URL. Paste ChordPro chords. Tap to sync each line once.
-            Then play it back karaoke-style — chords and lyrics highlighted in real time.
+            Paste a YouTube URL. Add your chords. Sync once, then play and sing along
+            with everything highlighted in real time.
           </p>
 
           {/* Feature steps */}
