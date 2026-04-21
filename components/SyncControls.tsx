@@ -97,7 +97,7 @@ export function SyncControls({
             onClick={onSync}
             className="flex-1 py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-lg text-lg transition-colors active:scale-95"
           >
-            Tap when line {syncingLineNum + 1} starts{' '}
+            👂 Tap when line {syncingLineNum + 1} begins{' '}
             <kbd className="ml-2 px-1.5 py-0.5 bg-black/20 rounded text-sm font-mono">SPACE</kbd>
           </button>
           <button
@@ -127,7 +127,7 @@ export function SyncControls({
         </button>
         <button
           onClick={onUndo}
-          disabled={syncingLineNum === 0}
+          disabled={syncingLineNum <= 1}
           className="flex-1 min-w-[80px] py-2 px-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg text-sm transition-colors disabled:opacity-40"
           title="Z key"
         >

@@ -6,6 +6,7 @@ interface Props {
   lines: ParsedLine[];
   activeIndex?: number;
   syncingIndex?: number;
+  playingIndex?: number;
   fontSize?: 'normal' | 'large';
   highlightMode?: 'none' | 'active' | 'syncing';
 }
@@ -14,6 +15,7 @@ export function ChordDisplay({
   lines,
   activeIndex = -1,
   syncingIndex = -1,
+  playingIndex = -1,
   fontSize = 'normal',
   highlightMode = 'none',
 }: Props) {
@@ -38,6 +40,7 @@ export function ChordDisplay({
         }
 
         const isActive = highlightMode === 'active' && i === activeIndex;
+        const isPlaying = highlightMode === 'syncing' && i === playingIndex;
         const isSyncing = highlightMode === 'syncing' && i === syncingIndex;
 
         return (
@@ -47,9 +50,11 @@ export function ChordDisplay({
               'rounded-lg px-3 py-1.5 transition-all duration-150',
               isActive
                 ? 'bg-amber-500/20 border border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.15)]'
-                : isSyncing
-                  ? 'bg-zinc-800 border border-zinc-600'
-                  : 'border border-transparent',
+                : isPlaying
+                  ? 'bg-amber-500/10 border border-amber-500/25'
+                  : isSyncing
+                    ? 'bg-zinc-800 border border-zinc-600'
+                    : 'border border-transparent',
             ].join(' ')}
           >
             <ChordLine pairs={line.pairs} textSize={textSize} chordSize={chordSize} />

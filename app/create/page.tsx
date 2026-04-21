@@ -107,7 +107,8 @@ function CreatePageInner() {
   }, [syncingIdx]);
 
   const handleUndo = useCallback(() => {
-    if (syncingIdx === 0) return;
+    // Can't undo past line 1 — it was auto-recorded on Start Syncing
+    if (syncingIdx <= 1) return;
     const newIdx = syncingIdx - 1;
     const lineIndex = syncableLinesRef.current[newIdx].index;
     setTimings((prev) => prev.filter((t) => t.index !== lineIndex));
@@ -130,6 +131,14 @@ function CreatePageInner() {
   const handleStartSync = useCallback(() => {
     setSyncStarted(true);
     playerRef.current?.play();
+    // Auto-record line 1 at current time so it highlights from the start.
+    // The user's first tap will then correctly mark when line 2 begins.
+    const sl = syncableLinesRef.current;
+    if (sl.length > 0) {
+      const t = playerRef.current?.getCurrentTime() ?? 0;
+      setTimings([{ index: sl[0].index, time: t }]);
+      setSyncingIdx(1);
+    }
   }, []);
 
   const handleJumpBack = useCallback(() => {
@@ -202,6 +211,7 @@ function CreatePageInner() {
   };
 
   const syncCurrentLine = syncableLinesRef.current[syncingIdx];
+  const syncPlayingLine = syncableLinesRef.current[syncingIdx - 1];
 
   if (mode === 'input') {
     return (
@@ -314,7 +324,7 @@ function CreatePageInner() {
           </button>
           {mode === 'playback' && (
             <button
-              onClick={() => { setMode('sync'); setSyncStarted(false); playerRef.current?.pause(); }}
+              onClick={() => { setMode('sync'); setSyncStarted(false); setSyncingIdx(0); setTimings([]); playerRef.current?.pause(); }}
               className="text-xs px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded-lg transition-colors"
             >
               Re-sync
@@ -432,6 +442,7 @@ function CreatePageInner() {
                 <ChordDisplay
                   lines={parsedLines}
                   syncingIndex={syncCurrentLine?.index}
+                  playingIndex={syncPlayingLine?.index}
                   highlightMode="syncing"
                   fontSize={fontSize}
                 />
