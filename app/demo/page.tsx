@@ -33,19 +33,21 @@ Is when he's [Am]on a [E]drunk [Am]
 {eoc}`;
 
 // Pre-built timings synced to The Animals' original (approximated for demo)
+// Indices match the lyric lines in DEMO_CHORD_PRO (0-based, counting all lines including
+// {title}, {artist}, blank, and {soc}/{eoc} directives)
 const DEMO_TIMINGS: SyncedLine[] = [
-  { index: 3,  time: 14 },
-  { index: 4,  time: 17 },
-  { index: 5,  time: 21 },
-  { index: 6,  time: 25 },
-  { index: 9,  time: 29 },
-  { index: 10, time: 32 },
-  { index: 11, time: 36 },
-  { index: 12, time: 40 },
-  { index: 15, time: 44 },
-  { index: 16, time: 47 },
-  { index: 17, time: 51 },
-  { index: 18, time: 55 },
+  { index: 4,  time: 14 },  // There is a house in New Orleans
+  { index: 5,  time: 17 },  // They call the Rising Sun
+  { index: 6,  time: 21 },  // And it's been the ruin of many a poor boy
+  { index: 7,  time: 25 },  // And God I know I'm one
+  { index: 11, time: 29 },  // My mother was a tailor
+  { index: 12, time: 32 },  // She sewed my new blue jeans
+  { index: 13, time: 36 },  // My father was a gambling man
+  { index: 14, time: 40 },  // Down in New Orleans
+  { index: 18, time: 44 },  // Now the only thing a gambler needs
+  { index: 19, time: 47 },  // Is a suitcase and a trunk
+  { index: 20, time: 51 },  // And the only time he's satisfied
+  { index: 21, time: 55 },  // Is when he's on a drunk
 ];
 
 // The Animals — House of the Rising Sun (official)
