@@ -35,6 +35,7 @@ function CreatePageInner() {
   const [fontSize, setFontSize] = useState<'normal' | 'large'>('normal');
   const [savedLocally, setSavedLocally] = useState(false);
   const [transpose, setTranspose] = useState(0);
+  const [syncStarted, setSyncStarted] = useState(false);
 
   const playerRef = useRef<YouTubePlayerHandle>(null);
   const syncableLinesRef = useRef<{ index: number; line: ParsedLine }[]>([]);
@@ -75,6 +76,7 @@ function CreatePageInner() {
     setVideoId(id);
     setTimings([]);
     setSyncingIdx(0);
+    setSyncStarted(false);
     setError('');
     setShareUrl('');
     setSavedLocally(false);
@@ -115,6 +117,13 @@ function CreatePageInner() {
   const handleReset = useCallback(() => {
     setTimings([]);
     setSyncingIdx(0);
+    setSyncStarted(false);
+    playerRef.current?.pause();
+  }, []);
+
+  const handleStartSync = useCallback(() => {
+    setSyncStarted(true);
+    playerRef.current?.play();
   }, []);
 
   const handleJumpBack = useCallback(() => {
@@ -132,7 +141,7 @@ function CreatePageInner() {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-      if (e.code === 'Space') { e.preventDefault(); handleSync(); }
+      if (e.code === 'Space') { e.preventDefault(); if (syncStarted) handleSync(); }
       else if (e.code === 'KeyZ' && !e.metaKey && !e.ctrlKey) handleUndo();
       else if (e.code === 'KeyR') handleReset();
       else if (e.code === 'ArrowLeft') handleJumpBack();
@@ -140,7 +149,7 @@ function CreatePageInner() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [mode, handleSync, handleUndo, handleReset, handleJumpBack, handleTogglePlay]);
+  }, [mode, syncStarted, handleSync, handleUndo, handleReset, handleJumpBack, handleTogglePlay]);
 
   const handleSaveLocally = () => {
     const jam: Jam = {
@@ -298,7 +307,7 @@ function CreatePageInner() {
           </button>
           {mode === 'playback' && (
             <button
-              onClick={() => setMode('sync')}
+              onClick={() => { setMode('sync'); setSyncStarted(false); playerRef.current?.pause(); }}
               className="text-xs px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded-lg transition-colors"
             >
               Re-sync
@@ -336,6 +345,8 @@ function CreatePageInner() {
                 syncingLineNum={syncingIdx}
                 totalLines={syncableLinesRef.current.length}
                 currentTime={currentTime}
+                syncStarted={syncStarted}
+                onStartSync={handleStartSync}
                 onSync={handleSync}
                 onUndo={handleUndo}
                 onReset={handleReset}

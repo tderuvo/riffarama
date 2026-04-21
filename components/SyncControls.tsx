@@ -4,6 +4,8 @@ interface Props {
   syncingLineNum: number;
   totalLines: number;
   currentTime: number;
+  syncStarted: boolean;
+  onStartSync: () => void;
   onSync: () => void;
   onUndo: () => void;
   onReset: () => void;
@@ -17,6 +19,8 @@ export function SyncControls({
   syncingLineNum,
   totalLines,
   currentTime,
+  syncStarted,
+  onStartSync,
   onSync,
   onUndo,
   onReset,
@@ -27,6 +31,35 @@ export function SyncControls({
 }: Props) {
   const isDone = syncingLineNum >= totalLines;
   const progress = totalLines > 0 ? Math.round((syncingLineNum / totalLines) * 100) : 0;
+
+  if (!syncStarted) {
+    return (
+      <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-5">
+        <div className="space-y-1">
+          <h3 className="text-white font-semibold">Ready to sync</h3>
+          <p className="text-sm text-zinc-400">
+            Click <strong className="text-white">Start Syncing</strong> — the song will begin playing.
+            Then tap <kbd className="bg-zinc-800 px-1.5 py-0.5 rounded text-xs">Space</kbd> the
+            moment you <em>hear</em> each line start.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 text-xs text-zinc-500">
+          <span><kbd className="bg-zinc-800 px-1 rounded">Space</kbd> Mark each line</span>
+          <span><kbd className="bg-zinc-800 px-1 rounded">P</kbd> Pause / resume</span>
+          <span><kbd className="bg-zinc-800 px-1 rounded">←</kbd> Jump back 5s</span>
+          <span><kbd className="bg-zinc-800 px-1 rounded">Z</kbd> Undo last mark</span>
+        </div>
+
+        <button
+          onClick={onStartSync}
+          className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-lg text-lg transition-colors"
+        >
+          ▶ Start Syncing
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 space-y-4">
@@ -55,13 +88,13 @@ export function SyncControls({
         />
       </div>
 
-      {/* Main sync button */}
+      {/* Sync tap button */}
       {!isDone && (
         <button
           onClick={onSync}
           className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-lg text-lg transition-colors active:scale-95"
         >
-          Tap to Sync Line{' '}
+          Tap when line {syncingLineNum + 1} starts{' '}
           <kbd className="ml-2 px-1.5 py-0.5 bg-black/20 rounded text-sm font-mono">SPACE</kbd>
         </button>
       )}
@@ -98,12 +131,11 @@ export function SyncControls({
         </button>
       </div>
 
-      {/* Keyboard hints */}
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-zinc-600">
-        <span><kbd className="bg-zinc-800 px-1 rounded">Space</kbd> Sync next line</span>
+        <span><kbd className="bg-zinc-800 px-1 rounded">Space</kbd> Mark line</span>
+        <span><kbd className="bg-zinc-800 px-1 rounded">P</kbd> Pause / play</span>
         <span><kbd className="bg-zinc-800 px-1 rounded">←</kbd> Jump back 5s</span>
-        <span><kbd className="bg-zinc-800 px-1 rounded">Z</kbd> Undo last sync</span>
-        <span><kbd className="bg-zinc-800 px-1 rounded">R</kbd> Reset all</span>
+        <span><kbd className="bg-zinc-800 px-1 rounded">Z</kbd> Undo last mark</span>
       </div>
 
       {isDone && (
