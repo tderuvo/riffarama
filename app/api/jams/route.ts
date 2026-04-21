@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { pool } from '@/lib/db';
+import type { JamRow } from '@/lib/db';
 
 function generateId(): string {
   return crypto.randomUUID().replace(/-/g, '').slice(0, 16);
@@ -14,16 +15,24 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: 'videoId and chordPro are required' }, { status: 400 });
     }
 
-    const jam = await prisma.jam.create({
-      data: {
-        id: generateId(),
-        title: title || 'Untitled Jam',
+    const id = generateId();
+    const now = new Date();
+    const { rows } = await pool.query<JamRow>(
+      `INSERT INTO "Jam" (id, title, "videoId", "youtubeUrl", "chordPro", timings, "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING *`,
+      [
+        id,
+        title || 'Untitled Jam',
         videoId,
-        youtubeUrl: youtubeUrl || `https://www.youtube.com/watch?v=${videoId}`,
+        youtubeUrl || `https://www.youtube.com/watch?v=${videoId}`,
         chordPro,
-        timings: JSON.stringify(timings || []),
-      },
-    });
+        JSON.stringify(timings || []),
+        now,
+        now,
+      ]
+    );
+    const jam = rows[0];
 
     return Response.json({
       id: jam.id,

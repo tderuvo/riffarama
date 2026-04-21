@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { prisma } from '@/lib/prisma';
+import { pool } from '@/lib/db';
+import type { JamRow } from '@/lib/db';
 import { JamPlayer } from './JamPlayer';
 import type { Jam } from '@/types/jam';
 
@@ -14,7 +15,8 @@ export default async function JamPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const row = await prisma.jam.findUnique({ where: { id } });
+  const { rows } = await pool.query<JamRow>(`SELECT * FROM "Jam" WHERE id = $1`, [id]);
+  const row = rows[0];
   if (!row) notFound();
 
   const jam: Jam = {

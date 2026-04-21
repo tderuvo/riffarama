@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { pool } from '@/lib/db';
+import type { JamRow } from '@/lib/db';
 
 export async function GET(
   _request: NextRequest,
@@ -7,7 +8,8 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const jam = await prisma.jam.findUnique({ where: { id } });
+    const { rows } = await pool.query<JamRow>(`SELECT * FROM "Jam" WHERE id = $1`, [id]);
+    const jam = rows[0];
 
     if (!jam) {
       return Response.json({ error: 'Jam not found' }, { status: 404 });
@@ -38,14 +40,24 @@ export async function PUT(
     const body = await request.json();
     const { title, chordPro, timings } = body;
 
-    const jam = await prisma.jam.update({
-      where: { id },
-      data: {
-        ...(title !== undefined && { title }),
-        ...(chordPro !== undefined && { chordPro }),
-        ...(timings !== undefined && { timings: JSON.stringify(timings) }),
-      },
-    });
+    const updates: string[] = [];
+    const values: unknown[] = [];
+    let i = 1;
+
+    if (title !== undefined) { updates.push(`title = $${i++}`); values.push(title); }
+    if (chordPro !== undefined) { updates.push(`"chordPro" = $${i++}`); values.push(chordPro); }
+    if (timings !== undefined) { updates.push(`timings = $${i++}`); values.push(JSON.stringify(timings)); }
+    updates.push(`"updatedAt" = $${i++}`);
+    values.push(new Date());
+    values.push(id);
+
+    const { rows } = await pool.query<JamRow>(
+      `UPDATE "Jam" SET ${updates.join(', ')} WHERE id = $${i} RETURNING *`,
+      values
+    );
+    const jam = rows[0];
+
+    if (!jam) return Response.json({ error: 'Jam not found' }, { status: 404 });
 
     return Response.json({
       id: jam.id,
