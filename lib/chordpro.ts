@@ -5,6 +5,9 @@ export type ParsedLine =
   | { type: 'section'; raw: string; text: string }
   | { type: 'blank'; raw: string };
 
+// Lines with no chord brackets that look like section labels
+const SECTION_LABEL_RE = /^(intro|outro|verse|pre[-\s]?chorus|chorus|bridge|hook|refrain|coda|tag|solo|interlude|instrumental|spoken|ad[-\s]?lib|break|fill|riff|ending|repeat)(\s.*)?$/i;
+
 export function parseChordPro(text: string): ParsedLine[] {
   return text.split('\n').map((line): ParsedLine => {
     const trimmed = line.trim();
@@ -13,6 +16,11 @@ export function parseChordPro(text: string): ParsedLine[] {
 
     if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
       return { type: 'section', raw: line, text: trimmed.slice(1, -1) };
+    }
+
+    // Plain-text label with no chord brackets → treat as section
+    if (!trimmed.includes('[') && SECTION_LABEL_RE.test(trimmed)) {
+      return { type: 'section', raw: line, text: trimmed };
     }
 
     return { type: 'lyric', raw: line, pairs: parseChordLine(trimmed) };

@@ -114,6 +114,12 @@ function CreatePageInner() {
     setSyncingIdx(newIdx);
   }, [syncingIdx]);
 
+  const handleSkip = useCallback(() => {
+    const sl = syncableLinesRef.current;
+    if (syncingIdx >= sl.length) return;
+    setSyncingIdx((prev) => prev + 1);
+  }, [syncingIdx]);
+
   const handleReset = useCallback(() => {
     setTimings([]);
     setSyncingIdx(0);
@@ -142,6 +148,7 @@ function CreatePageInner() {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       if (e.code === 'Space') { e.preventDefault(); if (syncStarted) handleSync(); }
+      else if (e.code === 'KeyS') { if (syncStarted) handleSkip(); }
       else if (e.code === 'KeyZ' && !e.metaKey && !e.ctrlKey) handleUndo();
       else if (e.code === 'KeyR') handleReset();
       else if (e.code === 'ArrowLeft') handleJumpBack();
@@ -149,7 +156,7 @@ function CreatePageInner() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [mode, syncStarted, handleSync, handleUndo, handleReset, handleJumpBack, handleTogglePlay]);
+  }, [mode, syncStarted, handleSync, handleSkip, handleUndo, handleReset, handleJumpBack, handleTogglePlay]);
 
   const handleSaveLocally = () => {
     const jam: Jam = {
@@ -348,6 +355,7 @@ function CreatePageInner() {
                 syncStarted={syncStarted}
                 onStartSync={handleStartSync}
                 onSync={handleSync}
+                onSkip={handleSkip}
                 onUndo={handleUndo}
                 onReset={handleReset}
                 onJumpBack={handleJumpBack}

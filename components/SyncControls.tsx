@@ -7,6 +7,7 @@ interface Props {
   syncStarted: boolean;
   onStartSync: () => void;
   onSync: () => void;
+  onSkip: () => void;
   onUndo: () => void;
   onReset: () => void;
   onJumpBack: () => void;
@@ -22,6 +23,7 @@ export function SyncControls({
   syncStarted,
   onStartSync,
   onSync,
+  onSkip,
   onUndo,
   onReset,
   onJumpBack,
@@ -90,13 +92,22 @@ export function SyncControls({
 
       {/* Sync tap button */}
       {!isDone && (
-        <button
-          onClick={onSync}
-          className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-lg text-lg transition-colors active:scale-95"
-        >
-          Tap when line {syncingLineNum + 1} starts{' '}
-          <kbd className="ml-2 px-1.5 py-0.5 bg-black/20 rounded text-sm font-mono">SPACE</kbd>
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={onSync}
+            className="flex-1 py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-lg text-lg transition-colors active:scale-95"
+          >
+            Tap when line {syncingLineNum + 1} starts{' '}
+            <kbd className="ml-2 px-1.5 py-0.5 bg-black/20 rounded text-sm font-mono">SPACE</kbd>
+          </button>
+          <button
+            onClick={onSkip}
+            className="px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 rounded-lg text-sm transition-colors"
+            title="Skip this line (S key)"
+          >
+            Skip
+          </button>
+        </div>
       )}
 
       {/* Controls */}
@@ -133,6 +144,7 @@ export function SyncControls({
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-zinc-600">
         <span><kbd className="bg-zinc-800 px-1 rounded">Space</kbd> Mark line</span>
+        <span><kbd className="bg-zinc-800 px-1 rounded">S</kbd> Skip line</span>
         <span><kbd className="bg-zinc-800 px-1 rounded">P</kbd> Pause / play</span>
         <span><kbd className="bg-zinc-800 px-1 rounded">←</kbd> Jump back 5s</span>
         <span><kbd className="bg-zinc-800 px-1 rounded">Z</kbd> Undo last mark</span>
