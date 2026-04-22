@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
 
 export default function DemoPage() {
-  redirect('/jam/055ce9539d8041cc');
+  redirect('/jam/86de3ac6ea264b09');
 }
