@@ -122,6 +122,12 @@ export function JamPlayer({ jam }: Props) {
                 Close
               </button>
             </div>
+            <a
+              href={`mailto:?subject=${encodeURIComponent('Jam this with me 🎸')}&body=${encodeURIComponent(`Hey — check this out:\n\nI made this jam using Riffarama:\n${shareUrl}\n\nPlay it, or make your own:\nhttps://riffarama.com\n\nHappy jamming 🎸`)}`}
+              className="flex items-center justify-center gap-2 w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-sm transition-colors"
+            >
+              ✉️ Email this jam
+            </a>
           </div>
         </div>
       )}
