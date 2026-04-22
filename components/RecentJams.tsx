@@ -30,7 +30,7 @@ export function RecentJams() {
         {jams.map((jam) => (
           <Link
             key={jam.id}
-            href={`/create?load=${jam.id}`}
+            href={`/jam/${jam.id}`}
             className="group relative bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 rounded-xl p-4 transition-all"
           >
             <div className="flex items-start justify-between gap-2">
